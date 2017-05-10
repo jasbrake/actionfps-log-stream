@@ -1,16 +1,21 @@
 # ActionFPS Log Stream
-Streams the logs served by ActionFPS using EventSource to a file.
+A CLI utility to stream the logs served by ActionFPS using EventSource to a file.
 
-## Running
-*   Create the file `config.js` in the root folder
+## Install
+Install from npm using
+    `npm install -g actionfps-log-stream`
+## Usage
 
-    Example `config.js` file:
-    ```javascript
-    module.exports = {
-      logFilePath: 'test.log',
-      url: 'https://actionfps.com/logs',
-      authorization: '', // Can be left blank if you don't have a JWT
-      lastLineDate: '2017-05-04T00:00:00Z',
-    };
-    ```
-*   Run `npm install && node index`
+* ### Basic
+  ```
+  actionfps-log-stream [output path]
+  ```
+* ### Authentication
+  ```
+  AUTHORIZATION="Bearer [token here]" actionfps-log-stream [output path]
+  ```
+
+* ### Specify a start date
+  ```
+  DEFAULT_START_TIME="2016-01-02T03:04:05Z" actionfps-log-stream [output path]
+  ```
