@@ -36,7 +36,7 @@ const eventSource = new EventSource(config.url, {
   },
 });
 
-eventSource.addEventListener('message', (e) => {
+eventSource.addEventListener('log', (e) => {
   if (e.data !== '') {
     writeStream.write(`${e.data}\n`);
   }
