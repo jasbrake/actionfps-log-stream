@@ -3,13 +3,18 @@
 const EventSource = require('eventsource');
 const childProcess = require('child_process');
 const fs = require('fs');
-const config = require('./config');
+
+const authorization = process.env.AUTHORIZATION;
+const defaultStartTime = process.env.DEFAULT_START_TIME || '2016-01-02T03:04:05Z';
+const url = 'https://actionfps.com/logs';
+const args = process.argv.slice(2);
+const filePath = args[0];
 
 // Retrieves the last date in the log file to resume streaming.
 // Returns config.headers.lastLineDate if the log file isn't found.
-function getLastEventDate() {
+function getLastLogTime() {
   try {
-    const lastLineBuf = childProcess.execSync(`tail -1 ${config.logFilePath}`);
+    const lastLineBuf = childProcess.execSync(`tail -1 ${filePath}`);
     const lastLine = lastLineBuf.toString('utf8');
     const lastEventDate = lastLine.substring(0, 20);
     if (lastEventDate === '') {
@@ -19,22 +24,22 @@ function getLastEventDate() {
       return lastEventDate;
     }
   } catch (e) {
-    console.log(`File not found... starting from ${config.lastLineDate}`);
-    return config.lastLineDate;
+    console.log(`File not found... starting from ${defaultStartTime}`);
+    return defaultStartTime;
   }
 }
 
 // Open file stream
-const writeStream = fs.createWriteStream(config.logFilePath, {
+const writeStream = fs.createWriteStream(filePath, {
   flags: 'a',
   encoding: 'utf8',
 });
 
 // Open Event Source connection
-const eventSource = new EventSource(config.url, {
+const eventSource = new EventSource(url, {
   headers: {
-    Authorization: config.authorization,
-    'Last-Event-ID': getLastEventDate(),
+    Authorization: authorization,
+    'Last-Event-ID': getLastLogTime(),
   },
 });
 
@@ -45,12 +50,10 @@ eventSource.addEventListener('log', (e) => {
 }, false);
 
 eventSource.addEventListener('open', () => {
-  console.log(`Connected to ${config.url}`);
+  console.log(`Connected to ${url}`);
 }, false);
 
 eventSource.addEventListener('error', (e) => {
-  if (e.readyState === EventSource.CLOSED) {
-    writeStream.end();
-    console.log('Connection was closed');
-  }
+  writeStream.end();
+  console.log(JSON.stringify(e, null, 2));
 }, false);
