@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "CLI utility to stream the logs served by ActionFPS using EventSource to a file.",
   "main": "actionfps-log-stream.js",
+  "preferGlobal": "true",
+  "bin": {
+    "actionfps-log-stream": "./actionfps-log-stream.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
