@@ -1,6 +1,6 @@
 {
   "name": "actionfps-log-stream",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "CLI utility to stream the logs served by ActionFPS using EventSource to a file.",
   "main": "actionfps-log-stream.js",
   "preferGlobal": "true",
