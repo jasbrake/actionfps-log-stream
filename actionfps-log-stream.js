@@ -1,27 +1,24 @@
 #!/usr/bin/env node
-
 const EventSource = require('eventsource')
 const childProcess = require('child_process')
 const fs = require('fs')
 
-const authorization = process.env.AUTHORIZATION
-const defaultStartTime = process.env.DEFAULT_START_TIME || '2012-01-02T03:04:05Z'
 const url = 'https://actionfps.com/logs'
 const args = process.argv.slice(2)
 const filePath = args[0]
 
 // Retrieves the last date in the log file to resume streaming.
-// Returns config.headers.lastLineDate if the log file isn't found.
 function getLastLogTime () {
+  const defaultStartTime = process.env.DEFAULT_START_TIME || '2012-01-02T03:04:05Z'
   try {
     const lastLineBuf = childProcess.execSync(`tail -1 ${filePath}`)
     const lastLine = lastLineBuf.toString('utf8')
     const lastEventDate = lastLine.split('\t')[0]
-    if (lastEventDate === '') {
-      throw new Error({ message: 'No date found in file.' })
-    } else {
+    if (lastEventDate) {
       console.log(`Resuming streaming from ${lastEventDate}`)
       return lastEventDate
+    } else {
+      throw new Error({ message: 'No date found in file.' })
     }
   } catch (e) {
     console.log(`File not found... starting from ${defaultStartTime}`)
@@ -38,7 +35,7 @@ const writeStream = fs.createWriteStream(filePath, {
 // Open Event Source connection
 const eventSource = new EventSource(url, {
   headers: {
-    Authorization: authorization,
+    Authorization: process.env.AUTHORIZATION,
     'Last-Event-ID': getLastLogTime()
   }
 })
