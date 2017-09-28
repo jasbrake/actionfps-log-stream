@@ -5,7 +5,7 @@ const childProcess = require('child_process')
 const fs = require('fs')
 
 const authorization = process.env.AUTHORIZATION
-const defaultStartTime = process.env.DEFAULT_START_TIME || '2016-01-02T03:04:05Z'
+const defaultStartTime = process.env.DEFAULT_START_TIME || '2012-01-02T03:04:05Z'
 const url = 'https://actionfps.com/logs'
 const args = process.argv.slice(2)
 const filePath = args[0]
