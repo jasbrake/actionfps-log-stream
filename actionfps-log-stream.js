@@ -54,6 +54,5 @@ eventSource.addEventListener('open', () => {
 }, false)
 
 eventSource.addEventListener('error', (e) => {
-  writeStream.end()
   console.log(JSON.stringify(e, null, 2))
 }, false)
