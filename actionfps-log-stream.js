@@ -16,7 +16,7 @@ function getLastLogTime () {
   try {
     const lastLineBuf = childProcess.execSync(`tail -1 ${filePath}`)
     const lastLine = lastLineBuf.toString('utf8')
-    const lastEventDate = lastLine.substring(0, 20)
+    const lastEventDate = lastLine.split('\t')[0]
     if (lastEventDate === '') {
       throw new Error({ message: 'No date found in file.' })
     } else {
