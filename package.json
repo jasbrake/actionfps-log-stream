@@ -14,6 +14,6 @@
   "repository": "github:jasbrake/actionfps-log-stream",
   "license": "ISC",
   "dependencies": {
-    "eventsource": "^1.0.0"
+    "eventsource": "^1.0.5"
   }
 }
